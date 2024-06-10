@@ -53,7 +53,7 @@ const registerUserToMongo = async (name, email, uid) => {
     });
 };
 
-const signInWithGoogle = async () => {
+const signInWithGoogle = async (navigate) => {
   try {
     const response = await signInWithPopup(auth, googleProvider);
     const user = response.user;
@@ -63,7 +63,7 @@ const signInWithGoogle = async () => {
     const docs = await getDocs(q);
     localStorage.setItem("uid", user.uid);
     if (user.uid) {
-      window.location.href = "/createCampaigns";
+      navigate("/createCampaigns");
     }
     // await registerUserToMongo(
     //   user.displayName,
@@ -91,7 +91,7 @@ const logInWithEmailAndPassword = async (email, password) => {
     const user = response.user;
     localStorage.setItem("uid", user.uid);
     if (user.uid) {
-      window.location.href = "/createCampaigns";
+      navigate("/createCampaigns");
     }
   } catch (error) {
     console.log(error);
@@ -99,7 +99,7 @@ const logInWithEmailAndPassword = async (email, password) => {
   }
 };
 
-const registerWithEmailAndPassword = async (name, email, password) => {
+const registerWithEmailAndPassword = async (name, email, password,navigate) => {
   try {
     const response = await createUserWithEmailAndPassword(
       auth,
@@ -116,7 +116,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     // await registerUserToMongo(name, email, user.uid);
     localStorage.setItem("uid", user.uid);
     if (user.uid) {
-      window.location.href = "/createCampaigns";
+      navigate("/createCampaigns");
     }
   } catch (error) {
     console.log(error);

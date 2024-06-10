@@ -16,7 +16,7 @@ function Register() {
   const navigate = useNavigate();
 
   const register = () => {
-    registerWithEmailAndPassword(name, email, password);
+    registerWithEmailAndPassword(name, email, password,navigate);
     navigate("/");
   };
   const uid = localStorage.getItem("uid");

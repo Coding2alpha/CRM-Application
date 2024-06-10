@@ -37,13 +37,13 @@ const uid = localStorage.getItem("uid");
         />
         <button
           className="bg-orange-400 font-bold px-5 py-2 rounded-full text-white"
-          onClick={() => logInWithEmailAndPassword(email, password)}
+          onClick={() => logInWithEmailAndPassword(email, password,navigate)}
         >
           Login
         </button>
         <button
           className="border-2 bg-white border-gray-700 font-semibold px-5 py-2 rounded-full flex space-x-2 items-center justify-center"
-          onClick={signInWithGoogle}
+          onClick={()=>signInWithGoogle(navigate)}
         >
           <p>Login with</p>
           <img
