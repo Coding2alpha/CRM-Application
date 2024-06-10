@@ -28,7 +28,7 @@ const Campaigns = () => {
     const fetchCampaigns = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_APP_SERVER_DOMAIN}/campaigns`
+          `${import.meta.env.VITE_APP_SERVER_DOMAIN}/api/campaigns/stats`
         );
         const data = await response.json();
         setCampaigns(data);

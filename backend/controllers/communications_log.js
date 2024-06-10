@@ -1,15 +1,13 @@
 const CommunicationsLog = require("../models/communications_log");
 const Customer = require("../models/customer");
 
-
-
 // Create a new campaign
 // vendor API
 const createCampaign = async (req, res) => {
   const userId = req.params.userId;
   const { criteria, message } = req.body;
   const { query } = req.query;
-  const {audienceCriteria} = req.audienceCriteria;;
+  const { audienceCriteria } = req.audienceCriteria;
   // console.log(audienceCriteria);
   // console.log(criteria, message);
 
@@ -83,6 +81,30 @@ const getAllCampaign = async (req, res) => {
   }
 };
 
+const stats = async (req, res) => {
+  try {
+    const campaigns = await CommunicationsLog.find().sort({ createdAt: -1 });
 
+    // Add delivery stats
+    const campaignsWithStats = campaigns.map((campaign) => {
+      const totalCustomers = campaign.customers.length;
+      const sentCount = campaign.customers.filter(
+        (customer) => customer.status === "SENT"
+      ).length;
+      const failedCount = totalCustomers - sentCount;
 
-module.exports = { createCampaign, audience, getAllCampaign };
+      return {
+        ...campaign.toObject(),
+        totalCustomers,
+        sentCount,
+        failedCount,
+      };
+    });
+
+    res.status(200).send(campaignsWithStats);
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
+};
+
+module.exports = { createCampaign, audience, getAllCampaign, stats };
