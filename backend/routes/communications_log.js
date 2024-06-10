@@ -14,6 +14,6 @@ router
   .post(buildQuery, criteriaToString, createCampaign);
 router.route("/audience").post(buildQuery, audience);
 router.route("/getAllCampaign/:userId").get(getAllCampaign);
-router.route("/stats").get(stats);
+router.route("/stats/:userId").get(stats);
 
 module.exports = router;

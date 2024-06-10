@@ -83,7 +83,10 @@ const getAllCampaign = async (req, res) => {
 
 const stats = async (req, res) => {
   try {
-    const campaigns = await CommunicationsLog.find().sort({ createdAt: -1 });
+    const userId = req.params.userId;
+    const campaigns = await CommunicationsLog.find({ userId }).sort({
+      createdAt: -1,
+    });
 
     // Add delivery stats
     const campaignsWithStats = campaigns.map((campaign) => {
@@ -94,7 +97,6 @@ const stats = async (req, res) => {
       const failedCount = totalCustomers - sentCount;
 
       return {
-        ...campaign.toObject(),
         totalCustomers,
         sentCount,
         failedCount,
