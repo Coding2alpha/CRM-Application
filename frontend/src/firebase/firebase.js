@@ -17,6 +17,7 @@ import {
   where,
   addDoc,
 } from "firebase/firestore";
+import toast from "react-hot-toast";
 
 // console.log(import.meta.env.VITE_APP_API_KEY);
 const firebaseConfig = {
@@ -46,7 +47,7 @@ const registerUserToMongo = async (name, email, uid) => {
     },
   })
     .then(() => {
-      console.log("User registered sucessfully!");
+      toast("User registered sucessfully!");
     })
     .catch((err) => {
       console.log(err.message);
@@ -57,7 +58,7 @@ const signInWithGoogle = async (navigate) => {
   try {
     const response = await signInWithPopup(auth, googleProvider);
     const user = response.user;
-    console.log(user);
+    // console.log(user);
 
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
     const docs = await getDocs(q);

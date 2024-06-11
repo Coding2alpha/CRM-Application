@@ -1,6 +1,5 @@
 const buildQuery = (req, res, next) => {
   const { criteria } = req.body;
-  // console.log(criteria);
   const conditions = [];
 
   if (criteria.totalSpends) {
@@ -15,9 +14,7 @@ const buildQuery = (req, res, next) => {
     }
   }
 
-  // Handle visits with condition
   if (criteria.visits) {
-    console.log(criteria.visits);
     if (criteria.visitsCondition === "greaterThan") {
       conditions.push({ visits: { $gt: parseInt(criteria.visits) } });
     } else if (criteria.visitsCondition === "lessThan") {
@@ -27,17 +24,19 @@ const buildQuery = (req, res, next) => {
     }
   }
 
-  if (criteria.visitStatus === "visitedInLastMonth") {
-    const date = new Date();
-    date.setMonth(date.getMonth() - 1);
-    conditions.push({ last_visit: { $gte: date } });
-  } else if (
-    criteria.visitStatus === "notVisitedInLastMonths" &&
-    criteria.months !== ""
-  ) {
-    const date = new Date();
-    date.setMonth(date.getMonth() - parseInt(criteria.months));
-    conditions.push({ last_visit: { $lt: date } });
+  if (criteria.months) {
+    if (criteria.visitStatus === "visitedInLastMonth") {
+      const date = new Date();
+      date.setMonth(date.getMonth() - 1);
+      conditions.push({ last_visit: { $gte: date } });
+    } else if (
+      criteria.visitStatus === "notVisitedInLastMonths" &&
+      criteria.months !== ""
+    ) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - parseInt(criteria.months));
+      conditions.push({ last_visit: { $lt: date } });
+    }
   }
 
   let query;
@@ -46,7 +45,6 @@ const buildQuery = (req, res, next) => {
   } else if (criteria.logic === "AND") {
     query = { $and: conditions };
   } else if (criteria.logic === "CUSTOM") {
-    // Custom combination logic handling
     query = buildCustomQuery(conditions, criteria.customLogic);
   }
 
@@ -55,19 +53,37 @@ const buildQuery = (req, res, next) => {
 };
 
 const buildCustomQuery = (conditions, customLogic) => {
-  const customQuery = { $and: [] };
-  // console.log(typeof customLogic);
+  const customQuery = {};
 
-  if (customLogic.includes("AND")) {
-    const andConditions = customLogic
-      .split("AND")
-      .map((index) => conditions[parseInt(index)]);
-    customQuery.$and.push({ $and: andConditions });
-  } else if (customLogic.includes("OR")) {
-    const orConditions = customLogic
-      .split("OR")
-      .map((index) => conditions[parseInt(index)]);
-    customQuery.$and.push({ $or: orConditions });
+  // Parse the custom logic to get the order of indices and operators
+  const parts = customLogic.split(" ");
+  const indices = parts.filter((part) => !isNaN(parseInt(part))).map(Number);
+  const operators = parts.filter((part) => isNaN(parseInt(part)));
+
+  // Reorder the conditions array based on the custom logic
+  const reorderedConditions = indices.map((index) => conditions[index]);
+
+  if (reorderedConditions.length < 3 || operators.length < 2) {
+    throw new Error("Custom logic must contain 3 conditions and 2 operators.");
+  }
+
+  // Build the query using the first operator between the first two conditions
+  let intermediateResult;
+  if (operators[0] === "AND") {
+    intermediateResult = {
+      $and: [reorderedConditions[0], reorderedConditions[1]],
+    };
+  } else if (operators[0] === "OR") {
+    intermediateResult = {
+      $or: [reorderedConditions[0], reorderedConditions[1]],
+    };
+  }
+  // console.log(intermediateResult);
+  // Apply the second operator between the intermediate result and the third condition
+  if (operators[1] === "AND") {
+    customQuery.$and = [intermediateResult, reorderedConditions[2]];
+  } else if (operators[1] === "OR") {
+    customQuery.$or = [intermediateResult, reorderedConditions[2]];
   }
   // console.log(customQuery);
   return customQuery;

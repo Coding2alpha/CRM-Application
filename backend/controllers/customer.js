@@ -1,12 +1,11 @@
-const Customer=require('../models/customer')
-
+const Customer = require("../models/customer");
 
 const addCustomer = async (req, res) => {
   try {
     // console.log(req.body);
     const customer = new Customer(req.body);
     await customer.save();
-    res.status(201).send(customer);
+    res.status(201).send("Customer added Successfully");
   } catch (error) {
     res.status(400).send(error.message);
   }

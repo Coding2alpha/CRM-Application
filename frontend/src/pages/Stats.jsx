@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
 import { Bar } from "react-chartjs-2";
+import { logOut } from "../firebase/firebase";
+
 import {
   Chart as ChartJS,
   BarElement,
@@ -89,6 +91,12 @@ const Campaigns = () => {
         <h2 className="text-2xl font-bold mb-4">Campaigns</h2>
         <Bar data={data} options={options} />
       </div>
+      <button
+        className="bg-green-500 text-white px-4 py-2 mr-1 absolute top-4 right-4 z-10"
+        onClick={logOut}
+      >
+        Logout
+      </button>
     </div>
   );
 };

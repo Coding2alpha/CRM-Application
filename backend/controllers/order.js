@@ -1,9 +1,13 @@
-const Order=require('../models/order')
+const Order = require("../models/order");
 const Customer = require("../models/customer");
 
 const addOrder = async (req, res) => {
-    const { email, orderAmount } = req.body;
+  const { email, orderAmount } = req.body;
   try {
+    if (!orderAmount || !email) {
+      res.status(400).send("Please add all fielda like email and orderAmount");
+      return;
+    }
     const order = new Order({
       email,
       orderAmount,
@@ -16,11 +20,11 @@ const addOrder = async (req, res) => {
       {
         $inc: { visits: 1, total_spends: orderAmount },
         last_visit: new Date(),
-      },
-    //   { new: true, upsert: true } // Create the customer if it doesn't exist
+      }
+      //   { new: true, upsert: true } // Create the customer if it doesn't exist
     );
 
-    res.status(201).send(order);
+    res.status(201).send("order successfull");
   } catch (error) {
     res.status(400).send(error);
   }

@@ -6,7 +6,7 @@ import Login from "./pages/Login";
 import Stats from "./pages/Stats";
 import { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
-
+import Header from "./components/Header";
 
 const App = () => {
   const uid = localStorage.getItem("uid");
@@ -33,14 +33,17 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      <Header />
       <Toaster />
-      <Routes>
-        <Route path="" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/createCampaigns" element={<CreateCampaign />} />
-        <Route path="/campaigns" element={<Campaign />} />
-        <Route path="/stats" element={<Stats />} />
-      </Routes>
+      <div className="pt-16 min-h-[calc(100vh)] h-full bg-slate-300 relative">
+        <Routes>
+          <Route path="" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/createCampaigns" element={<CreateCampaign />} />
+          <Route path="/campaigns" element={<Campaign />} />
+          <Route path="/stats" element={<Stats />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 };
