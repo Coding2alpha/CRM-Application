@@ -7,52 +7,50 @@ const createCampaign = async (req, res) => {
   const userId = req.params.userId;
   const { criteria, message } = req.body;
   const { query } = req.query;
-  const { audienceCriteria } = req.audienceCriteria;
-  // console.log(audienceCriteria);
-  // console.log(criteria, message);
-    try {
-      const customers = await Customer.find(query);
+  const audienceCriteria = req.audienceCriteria; // This should now be a string
 
-      // Convert criteria to a readable string
-      // const audienceCriteria = criteriaToString(criteria);
+  try {
+    // Evaluate audience criteria (example)
+    const customers = await Customer.find(query);
 
-      // Create communications log
-      const logEntry = new CommunicationsLog({
-        userId,
-        audienceCriteria,
-        message,
-        customers: customers.map((customer) => ({
-          email: customer.email,
-          status: "SENT", // Initial status; could be SENT or FAILED based on the actual delivery
-        })),
+    // Create communications log
+    const logEntry = new CommunicationsLog({
+      userId,
+      audienceCriteria, // This should now be a string
+      message,
+      customers: customers.map((customer) => ({
+        email: customer.email,
+        status: "SENT", // Initial status; could be SENT or FAILED based on the actual delivery
+      })),
+    });
+    await logEntry.save();
+
+    // Simulate sending messages and updating statuses
+    const updateStatusPromises = logEntry.customers.map(async (customer) => {
+      const status = Math.random() < 0.9 ? "SENT" : "FAILED"; // 90% SENT, 10% FAILED
+      await fetch(`${process.env.BACKEND_URL}/api/vendorToDummy/updateStatus`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          logId: logEntry._id,
+          customerEmail: customer.email,
+          status,
+        }),
       });
-      await logEntry.save();
-      // console.log(logEntry);
+    });
 
-      // Simulate sending messages and updating statuses
-      logEntry.customers.forEach(async (customer) => {
-        const status = Math.random() < 0.9 ? "SENT" : "FAILED"; // 90% SENT, 10% FAILED
-        console.log(status);
-        await fetch(
-          `${process.env.BACKEND_URL}/api/vendorToDummy/updateStatus`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              logId: logEntry._id,
-              customerEmail: customer.email,
-              status,
-            }),
-          }
-        );
-      });
-
-      res.status(201).send(logEntry);
-    } catch (error) {
-      res.status(400).send({ error: error.message });
+    // Send the response after all operations are complete
+    return res.status(201).send(logEntry);
+  } catch (error) {
+    // Check if headers have already been sent
+    if (!res.headersSent) {
+      return res.status(400).send({ error: error.message });
+    } else {
+      console.error("Error after headers sent:", error);
     }
+  }
 };
 
 const audience = async (req, res) => {

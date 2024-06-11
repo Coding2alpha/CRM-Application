@@ -1,7 +1,5 @@
-// Helper function to convert criteria to a readable string
 const criteriaToString = (req, res, next) => {
   const { criteria } = req.body;
-  console.log("criteriaToSTring");
   const conditions = [];
 
   if (criteria.totalSpends !== undefined && criteria.totalSpends !== "") {
@@ -43,17 +41,18 @@ const criteriaToString = (req, res, next) => {
       if (logic === "AND" || logic === "OR") {
         return logic;
       } else {
+        console.log(parseInt(logic), conditions[parseInt(logic)]);
         return conditions[parseInt(logic)];
       }
     });
     const audienceCriteria = customConditions.join(" ");
-
-    req.audienceCriteria = { audienceCriteria };
+    req.audienceCriteria = audienceCriteria;
     next();
+    return;
   }
+
   const audienceCriteria = conditions.join(" ");
-  console.log(audienceCriteria, "string");
-  req.audienceCriteria = { audienceCriteria };
+  req.audienceCriteria = audienceCriteria;
   next();
 };
 

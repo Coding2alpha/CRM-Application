@@ -27,7 +27,7 @@ const buildQuery = (req, res, next) => {
   if (criteria.months) {
     if (criteria.visitStatus === "visitedInLastMonth") {
       const date = new Date();
-      date.setMonth(date.getMonth() - 1);
+      date.setMonth(date.getMonth() - parseInt(criteria.months));
       conditions.push({ last_visit: { $gte: date } });
     } else if (
       criteria.visitStatus === "notVisitedInLastMonths" &&
@@ -85,7 +85,7 @@ const buildCustomQuery = (conditions, customLogic) => {
   } else if (operators[1] === "OR") {
     customQuery.$or = [intermediateResult, reorderedConditions[2]];
   }
-  // console.log(customQuery);
+  console.log(customQuery);
   return customQuery;
 };
 
