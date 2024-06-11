@@ -121,12 +121,12 @@ const CreateCampaign = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 ">
-      <button
+      {/* <button
         className="bg-green-500 text-white px-4 py-2 mr-1 absolute top-4 right-4 z-10"
         onClick={logOut}
       >
         Logout
-      </button>
+      </button> */}
       <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Create Audience</h2>
         <div className="p-4 bg-slate-400 my-2">
