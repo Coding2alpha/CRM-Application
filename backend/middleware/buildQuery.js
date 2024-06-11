@@ -87,7 +87,7 @@ const buildCustomQuery = (conditions, customLogic) => {
   } else if (operators[1] === "OR") {
     customQuery.$or = [intermediateResult, reorderedConditions[2]];
   }
-  console.log(customQuery);
+  // console.log(customQuery);
   return customQuery;
 };
 

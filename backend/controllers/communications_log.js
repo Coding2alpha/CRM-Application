@@ -27,7 +27,8 @@ const createCampaign = async (req, res) => {
 
     // Simulate sending messages and updating statuses
     const updateStatusPromises = logEntry.customers.map(async (customer) => {
-      const status = Math.random() < 0.9 ? "SENT" : "FAILED"; // 90% SENT, 10% FAILED
+      const status = Math.random() < 0.5 ? "SENT" : "FAILED"; // 90% SENT, 10% FAILED
+      console.log(status);
       await fetch(`${process.env.BACKEND_URL}/api/vendorToDummy/updateStatus`, {
         method: "POST",
         headers: {
@@ -56,7 +57,7 @@ const createCampaign = async (req, res) => {
 const audience = async (req, res) => {
   const { query } = req.query;
   // console.log(criteria);
-  console.log(query);
+  // console.log(query);
   try {
     // const query = buildQuery(criteria);
 

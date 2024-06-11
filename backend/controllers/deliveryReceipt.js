@@ -1,19 +1,21 @@
 const CommunicationsLog = require("../models/communications_log");
+const { addToQueue } = require("../utils/bactProcessor");
 
 // Dummy vendor API endpoint
-const updateStatus = async (req, res) => {
+const updateStatus = (req, res) => {
   const { logId, customerEmail, status } = req.body;
-  console.log(req.body);
-  // console.log(status);
+  if (!logId || !customerEmail || !status) {
+    return res.status(400).send("Missing required fields");
+  }
+
+  // console.log(req.body);
 
   try {
-    await CommunicationsLog.updateOne(
-      { _id: logId, "customers.email": customerEmail },
-      { $set: { "customers.$.status": status } }
-    );
-    return res.sendStatus(200);
+    console.log(status);
+    addToQueue({ logId, customerEmail, status });
+    return res.sendStatus(202); // 202 Accepted
   } catch (error) {
-    return res.status(400).send({ error: error.message });
+    return res.status(500).send({ error: error.message });
   }
 };
 

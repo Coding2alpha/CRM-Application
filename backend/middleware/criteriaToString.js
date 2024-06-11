@@ -41,7 +41,7 @@ const criteriaToString = (req, res, next) => {
       if (logic === "AND" || logic === "OR") {
         return logic;
       } else {
-        console.log(parseInt(logic), conditions[parseInt(logic)]);
+        // console.log(parseInt(logic), conditions[parseInt(logic)]);
         return conditions[parseInt(logic)];
       }
     });
