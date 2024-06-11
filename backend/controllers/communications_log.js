@@ -12,7 +12,6 @@ const createCampaign = async (req, res) => {
   // console.log(criteria, message);
 
   try {
-    // Evaluate audience criteria (example)
     const customers = await Customer.find(query);
 
     // Convert criteria to a readable string
@@ -88,7 +87,7 @@ const stats = async (req, res) => {
       createdAt: -1,
     });
 
-    // Add delivery stats
+    // Add delivery stats to particular user
     const campaignsWithStats = campaigns.map((campaign) => {
       const totalCustomers = campaign.customers.length;
       const sentCount = campaign.customers.filter(

@@ -84,7 +84,7 @@ const signInWithGoogle = async (navigate) => {
   }
 };
 
-const logInWithEmailAndPassword = async (email, password) => {
+const logInWithEmailAndPassword = async (email, password, navigate) => {
   try {
     const response = await signInWithEmailAndPassword(auth, email, password);
     // console.log(response);
@@ -99,7 +99,12 @@ const logInWithEmailAndPassword = async (email, password) => {
   }
 };
 
-const registerWithEmailAndPassword = async (name, email, password,navigate) => {
+const registerWithEmailAndPassword = async (
+  name,
+  email,
+  password,
+  navigate
+) => {
   try {
     const response = await createUserWithEmailAndPassword(
       auth,
