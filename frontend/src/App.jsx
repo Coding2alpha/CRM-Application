@@ -5,20 +5,21 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Stats from "./pages/Stats";
 import { useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
+
 
 const App = () => {
+  const uid = localStorage.getItem("uid");
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchWelcome = async () => {
       try {
         const response = await fetch(
-          `${
-            import.meta.env.VITE_APP_SERVER_DOMAIN
-          }`
+          `${import.meta.env.VITE_APP_SERVER_DOMAIN}`
         );
         if (response.ok) {
           const data = await response.json();
-          alert(data)
+          toast(data.msg);
         } else {
           console.error("Error:", response.statusText);
         }
@@ -28,10 +29,11 @@ const App = () => {
     };
 
     fetchWelcome();
-  },[])
+  }, [uid]);
 
   return (
     <BrowserRouter>
+      <Toaster />
       <Routes>
         <Route path="" element={<Login />} />
         <Route path="/register" element={<Register />} />

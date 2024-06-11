@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Welcome To CRM Application");
+  res.send({msg:"Welcome To CRM Application"});
 });
 
 app.use("/api/customers", customerRouter);
