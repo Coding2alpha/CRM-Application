@@ -7,7 +7,7 @@ const createCampaign = async (req, res) => {
   const userId = req.params.userId;
   const { criteria, message } = req.body;
   const { query } = req.query;
-  const audienceCriteria = req.audienceCriteria; // This should now be a string
+  const audienceCriteria = req.audienceCriteria.toString(); // Convert to string
 
   try {
     // Evaluate audience criteria (example)
@@ -16,7 +16,7 @@ const createCampaign = async (req, res) => {
     // Create communications log
     const logEntry = new CommunicationsLog({
       userId,
-      audienceCriteria, // This should now be a string
+      audienceCriteria,
       message,
       customers: customers.map((customer) => ({
         email: customer.email,
@@ -27,23 +27,34 @@ const createCampaign = async (req, res) => {
 
     // Simulate sending messages and updating statuses
     const updateStatusPromises = logEntry.customers.map(async (customer) => {
-      const status = Math.random() < 0.9 ? "SENT" : "FAILED"; // 90% SENT, 10% FAILED
-      console.log(status);
-      await fetch(`${process.env.BACKEND_URL}/api/vendorToDummy/updateStatus`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          logId: logEntry._id,
-          customerEmail: customer.email,
-          status,
-        }),
-      });
+      const status = Math.random() < 0.6 ? "SENT" : "FAILED"; // 90% SENT, 10% FAILED
+      // console.log(status);
+      return await fetch(
+        `${process.env.BACKEND_URL}/api/vendorToDummy/updateStatus`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            logId: logEntry._id,
+            customerEmail: customer.email,
+            status,
+          }),
+        }
+      );
+    });
+
+    // Wait for all status updates to complete
+    await Promise.all(updateStatusPromises);
+
+    // Fetch the data after saving
+    const data = await CommunicationsLog.find({
+      _id: logEntry._id,
     });
 
     // Send the response after all operations are complete
-    return res.status(201).send(logEntry);
+    return res.status(201).send(data);
   } catch (error) {
     // Check if headers have already been sent
     if (!res.headersSent) {

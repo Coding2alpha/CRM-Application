@@ -1,4 +1,4 @@
-const { MongoClient } = require("mongodb");
+
 const communications_log = require("../models/communications_log");
 require("dotenv").config();
 
@@ -14,13 +14,13 @@ function addToQueue(updateRequest) {
 
 // Function to process the queue in batches
 async function processQueue() {
-  if (queue.length === 0 ) {
+  if (queue.length === 0) {
     return;
   }
 
   const batch = queue.splice(0, batchSize);
   const count = batch.length;
-  console.log(`Number of operations in batch: ${count}`);
+  console.log(`Number of operations in batch: ${count}`, "batch");
   const bulkOperations = batch.map((update) => ({
     updateOne: {
       filter: { _id: update.logId, "customers.email": update.customerEmail },
