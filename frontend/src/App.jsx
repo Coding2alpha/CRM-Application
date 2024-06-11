@@ -23,6 +23,7 @@ const App = () => {
           const data = await response.json();
           toast(data.msg);
           setServerOn(true)
+          console.log(data.msg);
         } else {
           console.error("Error:", response.statusText);
         }
