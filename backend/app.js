@@ -5,7 +5,7 @@ const connectDB = require("./db/connect");
 const customerRouter = require("./routes/customer");
 const orderRouter = require("./routes/order");
 const campaignsRouter = require("./routes/communications_log");
-const dummyApiRouter = require("./routes/dummy.js");
+const dummyApiRouter = require("./routes/deliveryReceipt.js");
 const CommunicationsLog = require("./models/communications_log.js");
 
 const app = express();

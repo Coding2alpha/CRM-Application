@@ -28,6 +28,7 @@ const buildQuery = (req, res, next) => {
     if (criteria.visitStatus === "visitedInLastMonth") {
       const date = new Date();
       date.setMonth(date.getMonth() - parseInt(criteria.months));
+      // console.log(date,'visit');
       conditions.push({ last_visit: { $gte: date } });
     } else if (
       criteria.visitStatus === "notVisitedInLastMonths" &&
@@ -35,6 +36,7 @@ const buildQuery = (req, res, next) => {
     ) {
       const date = new Date();
       date.setMonth(date.getMonth() - parseInt(criteria.months));
+      // console.log(date);
       conditions.push({ last_visit: { $lt: date } });
     }
   }
