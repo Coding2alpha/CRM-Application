@@ -230,8 +230,8 @@ const CreateCampaign = () => {
               <label className="block mb-2">
                 Custom Logic [e.g., 0 AND 1 OR 2] where first 2 field calculated
                 first and than the result of this calculated with the 3rd field
-                where 1 refers to(total Spends) 2 refers to(No. Of Visits)
-                3(refers to no. of months Visit Status)
+                where 0 refers to(total Spends) 1 refers to(No. Of Visits)
+                2(refers to no. of months Visit Status)
               </label>
               <input
                 type="text"
