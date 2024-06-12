@@ -25,6 +25,8 @@ const createCampaign = async (req, res) => {
     });
     await logEntry.save();
 
+    res.status(201).send(logEntry);
+
     // Simulate sending messages and updating statuses
     const updateStatusPromises = logEntry.customers.map(async (customer) => {
       const status = Math.random() < 0.9 ? "SENT" : "FAILED"; // 90% SENT, 10% FAILED
@@ -48,13 +50,7 @@ const createCampaign = async (req, res) => {
     // Wait for all status updates to complete
     await Promise.all(updateStatusPromises);
 
-    // Fetch the data after saving
-    const data = await CommunicationsLog.find({
-      _id: logEntry._id,
-    });
-
     // Send the response after all operations are complete
-    return res.status(201).send(data);
   } catch (error) {
     // Check if headers have already been sent
     if (!res.headersSent) {
