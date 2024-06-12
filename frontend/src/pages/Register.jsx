@@ -56,7 +56,7 @@ function Register() {
         >
           Register
         </button>
-        <button onClick={signInWithGoogle}>
+        <button onClick={()=>signInWithGoogle(navigate)}>
           <div className="border-2 bg-white border-gray-700 font-semibold px-5 py-2 rounded-full flex space-x-2 items-center justify-center">
             <p>Register with Google</p>
             <img

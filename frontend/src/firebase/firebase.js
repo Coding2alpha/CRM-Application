@@ -58,7 +58,7 @@ const signInWithGoogle = async (navigate) => {
   try {
     const response = await signInWithPopup(auth, googleProvider);
     const user = response.user;
-    // console.log(user);
+    console.log(user);
 
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
     const docs = await getDocs(q);
