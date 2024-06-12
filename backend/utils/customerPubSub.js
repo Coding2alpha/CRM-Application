@@ -7,7 +7,6 @@ const customerEventEmitter = new EventEmitter();
 // Function to process the queue in batches
 async function processCustomerQueue() {
   if (customerQueue.length === 0) return;
-
   const batchSize = parseInt(process.env.BATCH_SIZE, 10);
   const batch = customerQueue.splice(0, batchSize);
   console.log(`Number of operations in customer batch: ${batch.length}`);
