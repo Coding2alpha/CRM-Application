@@ -20,14 +20,14 @@ const createCampaign = async (req, res) => {
       message,
       customers: customers.map((customer) => ({
         email: customer.email,
-        status: "SENT", // Initial status; could be SENT or FAILED based on the actual delivery
+        status: "PENDING", // Initial status; could be SENT or FAILED based on the actual delivery
       })),
     });
     await logEntry.save();
 
     // Simulate sending messages and updating statuses
     const updateStatusPromises = logEntry.customers.map(async (customer) => {
-      const status = Math.random() < 0.6 ? "SENT" : "FAILED"; // 90% SENT, 10% FAILED
+      const status = Math.random() < 0.9 ? "SENT" : "FAILED"; // 90% SENT, 10% FAILED
       // console.log(status);
       return await fetch(
         `${process.env.BACKEND_URL}/api/vendorToDummy/updateStatus`,
@@ -96,25 +96,30 @@ const getAllCampaign = async (req, res) => {
 const stats = async (req, res) => {
   try {
     const userId = req.params.userId;
+    // console.log(userId);
     const campaigns = await CommunicationsLog.find({ userId }).sort({
       createdAt: -1,
     });
-
+    // console.log(campaigns);
     // Add delivery stats to particular user
     const campaignsWithStats = campaigns.map((campaign) => {
       const totalCustomers = campaign.customers.length;
       const sentCount = campaign.customers.filter(
         (customer) => customer.status === "SENT"
       ).length;
-      const failedCount = totalCustomers - sentCount;
+      const pendingCount = campaign.customers.filter(
+        (customer) => customer.status === "PENDING"
+      ).length;
+      const failedCount = totalCustomers - sentCount - pendingCount;
 
       return {
         totalCustomers,
         sentCount,
+        pendingCount,
         failedCount,
       };
     });
-
+    // console.log(campaignsWithStats);
     res.status(200).send(campaignsWithStats);
   } catch (error) {
     res.status(400).send({ error: error.message });

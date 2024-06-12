@@ -1,13 +1,16 @@
 const Customer = require("../models/customer");
+const addToCustomerQueue = require("../utils/customerPubSub");
 
 const addCustomer = async (req, res) => {
   try {
-    // console.log(req.body);
-    const customer = new Customer(req.body);
-    await customer.save();
-    res.status(201).send("Customer added Successfully");
+    const { name, email, total_spends, visits, last_visit } = req.body;
+    if (!name || !email) {
+      return res.status(400).send("Please provide name and email");
+    }
+    addToCustomerQueue({ name, email, total_spends, visits, last_visit });
+    res.status(200).json({ message: "Customer added to queue" });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(500).json({ error: error.message });
   }
 };
 

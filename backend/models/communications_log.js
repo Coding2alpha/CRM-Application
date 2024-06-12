@@ -18,7 +18,7 @@ const CommunicationsLogSchema = new mongoose.Schema({
       email: { type: String, required: true },
       status: {
         type: String,
-        enum: ["SENT", "FAILED"],
+        enum: ["SENT", "FAILED", "PENDING"],
         default: "SENT",
       },
       deliveryDate: { type: Date, default: Date.now },

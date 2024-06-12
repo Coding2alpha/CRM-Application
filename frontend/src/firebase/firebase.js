@@ -34,25 +34,25 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
-const registerUserToMongo = async (name, email, uid) => {
-  await fetch(`${process.env.REACT_APP_BASE_URL}/register`, {
-    method: "POST",
-    body: JSON.stringify({
-      name,
-      email,
-      uid,
-    }),
-    headers: {
-      "Content-type": "application/json",
-    },
-  })
-    .then(() => {
-      toast("User registered sucessfully!");
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
-};
+// const registerUserToMongo = async (name, email, uid) => {
+//   await fetch(`${process.env.REACT_APP_BASE_URL}/register`, {
+//     method: "POST",
+//     body: JSON.stringify({
+//       name,
+//       email,
+//       uid,
+//     }),
+//     headers: {
+//       "Content-type": "application/json",
+//     },
+//   })
+//     .then(() => {
+//       toast("User registered sucessfully!");
+//     })
+//     .catch((err) => {
+//       console.log(err.message);
+//     });
+// };
 
 const signInWithGoogle = async (navigate) => {
   try {

@@ -37,6 +37,7 @@ const Campaigns = () => {
         );
         const data = await response.json();
         setCampaigns(data);
+        // console.log(data);
       } catch (error) {
         console.error(error);
       }
@@ -63,6 +64,13 @@ const Campaigns = () => {
         borderWidth: 1,
       },
       {
+        label: "Pending",
+        data: campaigns.map((campaign) => campaign.pendingCount),
+        backgroundColor: "rgba(255, 206, 86, 0.6)",
+        borderColor: "rgba(255, 206, 86, 1)",
+        borderWidth: 1,
+      },
+      {
         label: "Failed",
         data: campaigns.map((campaign) => campaign.failedCount),
         backgroundColor: "rgba(255, 99, 132, 0.6)",
@@ -86,7 +94,7 @@ const Campaigns = () => {
   };
 
   return (
-    <div className=" flex flex-col items-center bg-gray-100">
+    <div className="flex flex-col items-center bg-gray-100">
       <div className="bg-white p-6 rounded shadow-md w-full max-w-4xl mt-6">
         <h2 className="text-2xl font-bold mb-4">Campaigns</h2>
         <Bar data={data} options={options} />
